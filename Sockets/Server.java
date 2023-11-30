@@ -13,7 +13,30 @@ public class Server {
 
     private static final int port = 2911;
     private static final String host = "localhost";
+    private static final List<Socket> clientArray = new ArrayList<>();
+    private static final List<Socket> authenticatedClients = new ArrayList<>();
+    private static final Map<Socket, String> clientUsernames = new HashMap<>();
+    private static final String PASSWORD = "route66";
 
+    public static void main(String[] args) {
+        try {
+            
+            ServerSocket serverSocket = new ServerSocket(port);
+            System.out.println("Serveri është i lidhur në portin " + host + ":" + port);
+            
+            while (true) {
+                Socket clientSocket = serverSocket.accept();
+                System.out.println("Klienti u lidh: " + clientSocket.getRemoteSocketAddress());
+
+                clientArray.add(clientSocket);
+
+                Thread clientThread = new Thread(() -> handleClient(clientSocket));
+                clientThread.start();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
      private static void handleClient(Socket clientSocket) {
         try {
             BufferedReader input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
