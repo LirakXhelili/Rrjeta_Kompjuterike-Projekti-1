@@ -78,4 +78,23 @@ public class Server {
 
     }
 
+     private static void handleReadCommand(String[] commands, PrintWriter output) {
+        if (!checkLengthOfCommandArray(commands)) {
+            output.println("Argumente të pavlefshme.");
+            return;
+        }
+
+        String emriFile = commands[1];
+        if (new File(emriFile).exists()) {
+            try {
+                String permbajtja = new String(Files.readAllBytes(Paths.get(emriFile)));
+                output.println("File përmban: " + permbajtja);
+            } catch (IOException e) {
+                output.println("Gabim në leximin e file-it.");
+            }
+        } else {
+            output.println("File nuk ekziston.");
+        }
+    }
+
 }
