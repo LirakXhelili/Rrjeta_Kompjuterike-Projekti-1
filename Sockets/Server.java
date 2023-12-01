@@ -116,5 +116,9 @@ public class Server {
 
         output.println(teksti.toString());
     }
-
+    private static boolean hasExecutePermission(Socket clientSocket) {
+        boolean isAuthenticated = isAuthenticated(clientSocket);
+        System.out.println("Përdoruesi është autentikuar: " + isAuthenticated);
+        return isAuthenticated;
+    }
 }
