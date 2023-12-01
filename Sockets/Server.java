@@ -134,4 +134,25 @@ public class Server {
             e.printStackTrace();
         }
     }
+     private static void handlePasswordCommand(String[] commands, PrintWriter output, Socket clientSocket) {
+        if (commands.length < 3) {
+            output.println("Formati i gabuar. Për të futur fjalëkalimin, shkruani: /password fjalëkalimi username");
+            return;
+        }
+
+        String fjalekalimi = commands[1];
+        String username = commands[2];
+
+        if (fjalekalimi.equals(PASSWORD) && !authenticatedClients.contains(clientSocket)) {
+            authenticatedClients.add(clientSocket);
+            clientUsernames.put(clientSocket, username);
+            output.println("Mirësevini " + username + "!");
+        } else {
+            if (authenticatedClients.contains(clientSocket)) {
+                output.println("Ju jeni tashmë autentikuar.");
+            } else {
+                output.println("Gabim: Fjalëkalimi ose përdoruesi i gabuar.");
+            }
+        }
+    }
 }
