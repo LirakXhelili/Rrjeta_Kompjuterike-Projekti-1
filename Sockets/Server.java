@@ -97,4 +97,24 @@ public class Server {
         }
     }
 
+     private static void handleListCommand(Socket clientSocket, PrintWriter output) {
+        StringBuilder teksti = new StringBuilder();
+        int count = 1;
+
+        for (Socket klienti : clientArray) {
+            String username = clientUsernames.getOrDefault(klienti, "N/A");
+
+            if (klienti != clientSocket && !teksti.toString().contains("Klienti " + username)) {
+                teksti.append("Klienti ").append(username).append(" - ").append(klienti.getRemoteSocketAddress()).append("\n");
+                count++;
+            }
+        }
+
+        String clientUsername = clientUsernames.getOrDefault(clientSocket, "N/A");
+        teksti.append("Klienti ").append(clientUsername).append(" (vetvetiu) - ").append(clientSocket.getRemoteSocketAddress()).append("\n");
+        teksti.append("Numri i klientëve: ").append(count).append("\n");
+
+        output.println(teksti.toString());
+    }
+
 }
