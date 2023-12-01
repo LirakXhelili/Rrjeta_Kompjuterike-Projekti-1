@@ -45,4 +45,26 @@ public class Client{
             System.err.println("Gabim në lidhjen me serverin: " + e.getMessage());
         }
     }
+private static void menaxhoHyrjenEPerdoruesit(PrintWriter dalja) throws IOException {
+        BufferedReader lexuesiPerdoruesit = new BufferedReader(new InputStreamReader(System.in));
+
+        String hyrjaPerdoruesit;
+
+        while ((hyrjaPerdoruesit = lexuesiPerdoruesit.readLine()) != null) {
+            if (hyrjaPerdoruesit.startsWith("/msg")) {
+                String[] parts = hyrjaPerdoruesit.split(" ", 3);
+                if (parts.length == 3 && !parts[1].isEmpty()) {
+                    dalja.println(hyrjaPerdoruesit);
+                } else {
+                    System.out.println("Formati i gabuar. Për të dërguar një mesazh privat, shkruani: /msg username mesazhi");
+                }
+            } else {
+                dalja.println(hyrjaPerdoruesit);
+            }
+
+            if (hyrjaPerdoruesit.equals("/dalje")) {
+                break;
+            }
+        }
+    }
 }
