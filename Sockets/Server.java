@@ -121,4 +121,17 @@ public class Server {
         System.out.println("Përdoruesi është autentikuar: " + isAuthenticated);
         return isAuthenticated;
     }
+
+    private static void handleExitCommand(Socket clientSocket, PrintWriter output) {
+        output.println("/dalje");
+        try {
+            // e mbyll socketin e klientit edhe e largon klientin nga listat e klienteve
+            clientSocket.close();
+            clientArray.remove(clientSocket);
+            authenticatedClients.remove(clientSocket);
+            clientUsernames.remove(clientSocket);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
