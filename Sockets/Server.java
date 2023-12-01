@@ -83,6 +83,7 @@ public class Server {
             output.println("Argumente të pavlefshme.");
             return;
         }
+         
 
         String emriFile = commands[1];
         if (new File(emriFile).exists()) {
@@ -94,6 +95,40 @@ public class Server {
             }
         } else {
             output.println("File nuk ekziston.");
+        }
+    }
+    private static void handleWriteOrExecuteCommand(String[] commands, PrintWriter output, Socket clientSocket) {
+        if (!isAuthenticated(clientSocket) || !checkLengthOfCommandArray(commands)) {
+            output.println(!isAuthenticated(clientSocket) ? "I papranueshëm." : "Argumente të pavlefshme ose autentikimi i dështuar.");
+            return;
+        }
+
+        String emriFile = commands[1];
+        try {
+            if (commands[0].equals("/shkruaj")) {
+                String teksti = String.join(" ", Arrays.copyOfRange(commands, 2, commands.length));
+                Files.write(Paths.get(emriFile), teksti.getBytes());
+                output.println("Teksti juaj u shkrua te: " + emriFile);
+            } else if (commands[0].equals("/ekzekuto")) {
+
+                if (emriFile.isEmpty()) {
+                    output.println("Emri i file-it duhet të jepet.");
+                    return;
+                }
+
+                Files.createFile(Paths.get(emriFile));
+                output.println("File u krijua: " + emriFile);
+            } else {
+                if (new File(emriFile).exists()) {
+                    ProcessBuilder pb = new ProcessBuilder(emriFile);
+                    pb.start();
+                    output.println("File u ekzekutua: " + emriFile);
+                } else {
+                    output.println("File nuk ekziston.");
+                }
+            }
+        } catch (IOException e) {
+            output.println("Gabim në shkrimin/ekzekutimin e file-it.");
         }
     }
 
