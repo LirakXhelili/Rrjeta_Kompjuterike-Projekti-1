@@ -215,6 +215,30 @@ public class Server {
         }
     }
 
+     private static void handlePrivateMessage(String[] commands, Socket senderSocket) throws IOException {
+
+
+        if (commands.length >= 3) {
+            String receiverUsername = commands[1];
+            String message = String.join(" ", Arrays.copyOfRange(commands, 2, commands.length));
+
+            Socket receiverSocket = findSocketByUsername(receiverUsername);
+
+            if (receiverSocket != null) {
+                try {
+                    PrintWriter receiverOutput = new PrintWriter(receiverSocket.getOutputStream(), true);
+                    receiverOutput.println("Mesazh privat nga " + clientUsernames.get(senderSocket) + ": " + message);
+                } catch (IOException e) {
+                    throw new IOException("Gabim në dërgimin e mesazhit privat.", e);
+                }
+            } else {
+                PrintWriter output = new PrintWriter(senderSocket.getOutputStream(), true);
+                output.println("Përdoruesi " + receiverUsername + " nuk ekziston ose nuk është i disponueshëm.");
+            }
+        } else {
+            System.out.println("Formati i gabuar. Për të dërguar një mesazh privat, shkruani: /msg username mesazhi");
+        }
+    }
 
     //Kjo kontrollon nese një Socket i dhene(clientSocket) ndodhet ne listen e klienteve te autentikuar 
     private static boolean isAuthenticated(Socket clientSocket) {
