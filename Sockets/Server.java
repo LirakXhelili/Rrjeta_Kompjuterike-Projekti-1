@@ -135,23 +135,25 @@ public class Server {
     }
 
      private static void handleListCommand(Socket clientSocket, PrintWriter output) {
-        StringBuilder teksti = new StringBuilder();
+        StringBuilder teksti = new StringBuilder();// StringBuilder perdoret per nje tekst qe permban informata mbi klientet
         int count = 1;
-
+         
+        //Perdor nje 'for' per te shqyrtuar cdo element ne clientArray
         for (Socket klienti : clientArray) {
-            String username = clientUsernames.getOrDefault(klienti, "N/A");
+            String username = clientUsernames.getOrDefault(klienti, "N/A");//Per cdo perdoruse merret username(emri i perdoruesit) nga clientUsernames ose perdoret N/A nese nuk ekziston ai perdorues
 
-            if (klienti != clientSocket && !teksti.toString().contains("Klienti " + username)) {
-                teksti.append("Klienti ").append(username).append(" - ").append(klienti.getRemoteSocketAddress()).append("\n");
-                count++;
+            if (klienti != clientSocket && !teksti.toString().contains("Klienti " + username))//Kjo pjesen ben kontrollimin nese klienti e nuk eshte ai qe e ka bere kerkesen dhe nese klienti ekziston ne listen e klienteve
+            {
+                teksti.append("Klienti ").append(username).append(" - ").append(klienti.getRemoteSocketAddress()).append("\n");//Shtohen informancione per klientin ne tekst, si emri dhe adresa e larget te socket-it
+                count++;//Rritja e numrit te klienteve ne list per cdo klient te ri
             }
         }
 
-        String clientUsername = clientUsernames.getOrDefault(clientSocket, "N/A");
-        teksti.append("Klienti ").append(clientUsername).append(" (vetvetiu) - ").append(clientSocket.getRemoteSocketAddress()).append("\n");
-        teksti.append("Numri i klientëve: ").append(count).append("\n");
+        String clientUsername = clientUsernames.getOrDefault(clientSocket, "N/A");//Per klientin aktual qe ka bere kerkesen, merr emrin e perdoruesit nga clientUsernames ose perdor "N/A" nëse nuk ekziston
+        teksti.append("Klienti ").append(clientUsername).append(" (vetvetiu) - ").append(clientSocket.getRemoteSocketAddress()).append("\n");//Shtohet informacioni per klientin aktual ne tekst, duke perfshire emrin e perdoruesit dhe adresen e larget te socket-it.
+        teksti.append("Numri i klientëve: ").append(count).append("\n");//Numri i klienteve
 
-        output.println(teksti.toString());
+        output.println(teksti.toString());//Dergon pergjigjen, e cila eshte teksti i krijuar me lart, tek klienti aktual permes objektit output të tipit PrintWriter.
     }
     private static boolean hasExecutePermission(Socket clientSocket) {
         boolean isAuthenticated = isAuthenticated(clientSocket);
