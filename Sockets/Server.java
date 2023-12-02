@@ -39,37 +39,39 @@ public class Server {
     }
      private static void handleClient(Socket clientSocket) {
         try {
-            BufferedReader input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            PrintWriter output = new PrintWriter(clientSocket.getOutputStream(), true);
+            BufferedReader input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream())); //BufferedReader perdoret per te lexuar nga socket-i per hyrje
+            PrintWriter output = new PrintWriter(clientSocket.getOutputStream(), true);//PrintWriter per te shkruar ne socket per dalje.
 
             String line;
+            //Perdor nje loop per te lexuar linjat e derguara nga klienti, ku ndahen permes hapsirave(\\s+)
             while((line = input.readLine()) != null) {
                 String[] commands = line.split("\\s+");
+                //Perdorimi i switch case per kryrjen e veprimeve per secilen komande te pranuar
                 switch (commands[0]) {
-                    case "/lexo":
+                    case "/lexo": //'/lexo' thirret handelReadCommand per t'i trajtuar kerkesat per lexim
                         handleReadCommand(commands, output);
                         break;
-                    case "/shkruaj":
+                    case "/shkruaj":// Ndersa '/shkruaj' ose '/ekzekuto' thirret handelWriteExcuteCommand per t'i trajtuar kerkesat per shkrim ose ekzekutim
                     case "/ekzekuto":
                         handleWriteOrExecuteCommand(commands, output, clientSocket);
                         break;
-                    case "/dalje":
+                    case "/dalje"://Komanda /dalje e kryen funksionin per te trajtuar kerkesat per dalje nga klienti(Thirret handleExitCommand)
                         handleExitCommand(clientSocket, output);
                         break;
-                    case "/lista":
+                    case "/lista"://Kjo paraqet listen e klienteve(Thirret handleListCommand)
                         handleListCommand(clientSocket, output);
                         break;
-                    case "/password":
+                    case "/password"://Per te trajtuar kerkesat per ndryshimin e password-it(Thirret handlePasswordCommand)
                         handlePasswordCommand(commands, output, clientSocket);
                         break;
-                    case "/listofile":
+                    case "/listofile"://Kjo komand paraqet listen e dosjeve ne server(thirret handleListFilesCommand)
                         handleListFilesCommand(output);
                         break;
-                    case "/msg":
+                    case "/msg":// '/msg' perdoret per te derguar mesazha privat duke thirrur handlePrivateMessage per dergim
                         handlePrivateMessage(commands, clientSocket);
                         break;
                     default:
-                        output.println("400: Komandë e pavlefshme");
+                        output.println("400: Komandë e pavlefshme");//Ne momentin kur dergohet nje komande e pavlefshme, pergjigja do te jete me nje kod gabimi ("400: Komandë e pavlefshme")
                 }
             }
         } catch (IOException var8) {
