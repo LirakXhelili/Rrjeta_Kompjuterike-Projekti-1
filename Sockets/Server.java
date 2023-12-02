@@ -194,4 +194,24 @@ public class Server {
             }
         }
     }
+    private static void handleListFilesCommand(PrintWriter output) {
+        try {
+            File currentDirectory = new File(System.getProperty("user.dir"));
+            File[] files = currentDirectory.listFiles();
+
+            if (files != null && files.length > 0) {
+                StringBuilder fileList = new StringBuilder("Files në folderin e tanishëm:\n");
+
+                for (File file : files) {
+                    fileList.append(file.getName()).append("\n");
+                }
+
+                output.println(fileList.toString());
+            } else {
+                output.println("Files nuk u gjetën!.");
+            }
+        } catch (SecurityException e) {
+            output.println("Nuk ka qasje: " + e.getMessage());
+        }
+    }
 }
