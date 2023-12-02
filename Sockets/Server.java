@@ -214,4 +214,22 @@ public class Server {
             output.println("Nuk ka qasje: " + e.getMessage());
         }
     }
+
+
+    private static boolean isAuthenticated(Socket clientSocket) {
+        return authenticatedClients.contains(clientSocket);
+    }
+
+    private static boolean checkLengthOfCommandArray(String[] commandsArray) {
+        return commandsArray.length > 1;
+    }
+
+    private static Socket findSocketByUsername(String username) {
+        for (Map.Entry<Socket, String> entry : clientUsernames.entrySet()) {
+            if (entry.getValue().equalsIgnoreCase(username)) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
 }
