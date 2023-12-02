@@ -216,14 +216,15 @@ public class Server {
     }
 
 
+    //Kjo kontrollon nese një Socket i dhene(clientSocket) ndodhet ne listen e klienteve te autentikuar 
     private static boolean isAuthenticated(Socket clientSocket) {
         return authenticatedClients.contains(clientSocket);
     }
-
+    //Kontrollon nese gjatesia e vargut eshte me  e madhe se 1
     private static boolean checkLengthOfCommandArray(String[] commandsArray) {
         return commandsArray.length > 1;
     }
-
+    //Kerkon nje objekt Socket duke perdorur nje emer te perdoruesit si kriter per kerkim.
     private static Socket findSocketByUsername(String username) {
         for (Map.Entry<Socket, String> entry : clientUsernames.entrySet()) {
             if (entry.getValue().equalsIgnoreCase(username)) {
